@@ -31,7 +31,7 @@ export class Block{
       if (num === 0) {
         this.addBlock(
           new Block('this is the First block in the chain - Genesis block')
-        ).then(() => console.log('genesis Block was not exist, but created now'))
+        ).then(() => console.log('genesis Block was not existed, but it\'s created now'))
       }
     })
   }
