@@ -24,7 +24,7 @@ export class Block{
 |  Class with a constructor for new blockchain 		|
 |  ================================================*/
 
- class Blockchain{
+ export class Blockchain{
   constructor(){
 
     leveldb.getBlockHeight().then(num => {
