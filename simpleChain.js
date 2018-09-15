@@ -10,7 +10,7 @@ const leveldb = require('./levelSandbox')
 |  Class with a constructor for block 			   |
 |  ===============================================*/
 
-class Block{
+export class Block{
 	constructor(data){
      this.hash = "",
      this.height = 0,
@@ -24,7 +24,7 @@ class Block{
 |  Class with a constructor for new blockchain 		|
 |  ================================================*/
 
-export class Blockchain{
+ class Blockchain{
   constructor(){
 
     leveldb.getBlockHeight().then(num => {
@@ -56,19 +56,19 @@ export class Blockchain{
     // Block hash with SHA256 using newBlock and converting to a string
     newBlock.hash = SHA256(JSON.stringify(newBlock)).toString();
 
-//presist/store newBlock within LevelDB
+   //presist/store newBlock within LevelDB
     await leveldb.addBlock(newBlock.height, JSON.stringify(newBlock))
   }
 
   // Get block height
-    getBlockHeight(){
+   async getBlockHeight(){
 
       return await leveldb.getBlockHeight()
      
     }
 
     // get block
-    getBlock(blockHeight){
+    async getBlock(blockHeight){
       // return object as a single string
       return  await leveldb.getBlock(blockHeight)
 
@@ -76,12 +76,10 @@ export class Blockchain{
     }
 
 
-    
-
     // validate block
     async validateBlock(blockHeight){
       // get block object
-      let block = this.getBlock(blockHeight);
+      let block = await this.getBlock(blockHeight);
       // get block hash
       let blockHash = block.hash;
       // remove block hash to test block integrity
@@ -101,14 +99,27 @@ export class Blockchain{
     async validateChain(){
       let errorLog = [],
       chain=[],
+      block,
+      nextBlock,
+      blockHash,
+      previousHash,
+      valid,
       chainLength = await this.getBlockHeight();
 
       for (var i = 0; i < this.chainLength-1; i++) {
+
+        valid = await this.validateBlock(i)
         // validate block
-        if (!this.validateBlock(i))errorLog.push(i);
+        if (!valid){
+            errorLog.push(i);
+        }
         // compare blocks hash link
-        let blockHash = this.chain[i].hash;
-        let previousHash = this.chain[i+1].previousBlockHash;
+         block = await this.getBlock(i);
+         blockHash = block.hash;
+         nextBlock = await this.getBlock(i + 1)
+         previousHash = nextBlock.previousBlockHash;
+         chain.push(block);
+        
         if (blockHash!==previousHash) {
           errorLog.push(i);
         }
@@ -119,5 +130,7 @@ export class Blockchain{
       } else {
         console.log('No errors detected');
       }
+
+      return chain
     }
 }
