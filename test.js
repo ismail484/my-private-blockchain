@@ -13,29 +13,26 @@
 |  ===========================================================================*/
 
 
+const BlockChain = require('./simpleChain');
+const Block= require('./block');
+//import Block from './simpleChain';
+//import Blockchain from './simpleChain';
 
-import Block from './simpleChain';
-import Blockchain from './simpleChain';
 
-const  block = new Block(),
-blockchain = new Blockchain();
 
 
 
 (function theLoop (i) {
-    let myBlockblockchain=new Blockchain(),
+    let myBlockChain=new BlockChain(),
     blockTest;
     setTimeout(function () {
          blockTest = new Block("Test Block - " + (i + 1));
-        myBlockblockchain.addBlock(blockTest).then((result) => {
+        myBlockChain.addBlock(blockTest).then((result) => {
             console.log(result);
             i++;
             if (i < 10) theLoop(i);
         })
         
-        .then((result)=>{
-            reult.validateChain;
-        });
     }, 10000);
   })(0);
 

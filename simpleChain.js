@@ -1,56 +1,48 @@
+
+
+
 /* ===== SHA256 with Crypto-js ===============================
 |  Learn more: Crypto-js: https://github.com/brix/crypto-js  |
 |  =========================================================*/
 
 const SHA256 = require('crypto-js/sha256');
-const leveldb = require('./levelSandbox')
+const leveldb = require('./levelSandbox');
+const Block = require('./block');
 
 
-/* ===== Block Class ==============================
-|  Class with a constructor for block 			   |
-|  ===============================================*/
 
-export class Block{
-	constructor(data){
-     this.hash = "",
-     this.height = 0,
-     this.body = data,
-     this.time = 0,
-     this.previousBlockHash = ""
-    }
-}
 
 /* ===== Blockchain Class ==========================
 |  Class with a constructor for new blockchain 		|
 |  ================================================*/
 
- export class Blockchain{
+   class BlockChain{
   constructor(){
 
-    leveldb.getBlockHeight().then(num => {
-      if (num === 0) {
+    leveldb.getBlockHeight().then(count => {
+      if (count === 0) {
         this.addBlock(
           new Block('this is the First block in the chain - Genesis block')
         ).then(() => console.log('genesis Block was not existed, but it\'s created now'))
       }
     })
-  }
+  };
 
 
 
   // Add new block
   async addBlock(newBlock){
 
-    let prevBlock;
+   // let prevBlock;
 
     // Block height
-    newBlock.height = await getBlockHeight();
+    newBlock.height = await this.getBlockHeight();
     ;
     // UTC timestamp
     newBlock.time = new Date().getTime().toString().slice(0,-3);
     // previous block hash
     if(newBlock.height > 0){
-      prevBlock = await leveldb.getBlock(newBlock.height - 1);
+     const prevBlock = await this.getBlock(newBlock.height - 1);
       newBlock.previousBlockHash = prevBlock.hash;
     }
     // Block hash with SHA256 using newBlock and converting to a string
@@ -63,7 +55,8 @@ export class Block{
   // Get block height
    async getBlockHeight(){
 
-      return await leveldb.getBlockHeight()
+      return  blockHeight= await leveldb.getBlockHeight();
+
      
     }
 
@@ -71,9 +64,11 @@ export class Block{
     async getBlock(blockHeight){
       // return object as a single string
       return  await leveldb.getBlock(blockHeight)
+     
 
      // return JSON.parse(JSON.stringify(this.chain[blockHeight]));
     }
+
 
 
     // validate block
@@ -134,3 +129,6 @@ export class Block{
       return chain
     }
 }
+
+
+module.exports = BlockChain
