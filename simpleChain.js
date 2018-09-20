@@ -1,6 +1,4 @@
 
-
-
 /* ===== SHA256 with Crypto-js ===============================
 |  Learn more: Crypto-js: https://github.com/brix/crypto-js  |
 |  =========================================================*/
@@ -8,6 +6,8 @@
 const SHA256 = require('crypto-js/sha256');
 const leveldb = require('./levelSandbox');
 const Block = require('./block');
+
+
 
 
 
@@ -33,7 +33,7 @@ const Block = require('./block');
   // Add new block
   async addBlock(newBlock){
 
-   // let prevBlock;
+    let prevBlock;
 
     // Block height
     newBlock.height = await this.getBlockHeight();
@@ -42,7 +42,7 @@ const Block = require('./block');
     newBlock.time = new Date().getTime().toString().slice(0,-3);
     // previous block hash
     if(newBlock.height > 0){
-     const prevBlock = await this.getBlock(newBlock.height - 1);
+      prevBlock = await this.getBlock(newBlock.height - 1);
       newBlock.previousBlockHash = prevBlock.hash;
     }
     // Block hash with SHA256 using newBlock and converting to a string
@@ -55,7 +55,7 @@ const Block = require('./block');
   // Get block height
    async getBlockHeight(){
 
-      return  blockHeight= await leveldb.getBlockHeight();
+      return  await leveldb.getBlockHeight();
 
      
     }
@@ -63,10 +63,8 @@ const Block = require('./block');
     // get block
     async getBlock(blockHeight){
       // return object as a single string
-      return  await leveldb.getBlock(blockHeight)
+      return  JSON.parse(await leveldb.getBlock(blockHeight))
      
-
-     // return JSON.parse(JSON.stringify(this.chain[blockHeight]));
     }
 
 
@@ -129,6 +127,9 @@ const Block = require('./block');
       return chain
     }
 }
+
+
+
 
 
 module.exports = BlockChain

@@ -3,8 +3,6 @@
 |  =============================================================*/
 
 
-
-
 const level = require('level');
 const chainDB = './chaindata';
 const db = level(chainDB);
@@ -13,14 +11,14 @@ const db = level(chainDB);
 module.exports = {
 
 // Add data to levelDB with key/value pair
-addLevelDBData : (key,value)=>{
+addLevelDBData: (key,value)=>{
   db.put(key, value, function(err) {
     if (err) return console.log('Block ' + key + ' submission failed', err);
   })
 },
 
 // Get data from levelDB with key
-  getLevelDBData : (key)=>{
+  getLevelDBData: (key)=>{
   db.get(key, function(err, value) {
     if (err) return console.log('Not found!', err);
     console.log('Value = ' + value);
@@ -41,20 +39,21 @@ addLevelDBData : (key,value)=>{
 },
 
 
-  addBlock : (key, value) => {
+  addBlock: (key, value) => {
   return new Promise((resolve, reject) => {
-    db.put(key, value, err => {
-      if (err) reject(err)
+    db.put(key, value, error => {
+      if (error) reject(error)
+      console.log(`Added block # ${key}`)
       resolve('Added block #' + key)
     })
   })
 },
 
- getBlock :  key => {
+ getBlock:  key => {
   return new Promise((resolve, reject) => {
-    db.get(key, (err, value) => {
-      if (err) reject(err)
-      resolve(JSON.parse(value))
+    db.get(key, (error, value) => {
+      if (error) reject(error)
+      resolve(value)
     })
   })
 },
@@ -66,27 +65,16 @@ addLevelDBData : (key,value)=>{
       .on('data', data => {
         height++
       })
-      .on('error', err => {
-        reject(err)
+      .on('error', error => {
+        reject(error)
       })
       .on('close', () => {
         resolve(height)
       })
   })
-}
+},
 
 }
-
-
-/* module.exports = {
-  addLevelDBData,
-  getLevelDBData,
-  addDataToLevelDB,
-  addDataToLevelDB,
-  addBlock,
-  getBlock,
-  getBlockHeight
-}; */
 
 
 

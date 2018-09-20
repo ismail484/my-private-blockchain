@@ -15,24 +15,40 @@
 
 const BlockChain = require('./simpleChain');
 const Block= require('./block');
-//import Block from './simpleChain';
-//import Blockchain from './simpleChain';
 
 
+
+let myBlockChain=new BlockChain();
 
 
 
 (function theLoop (i) {
-    let myBlockChain=new BlockChain(),
-    blockTest;
+   let blockTest;
     setTimeout(function () {
          blockTest = new Block("Test Block - " + (i + 1));
-        myBlockChain.addBlock(blockTest).then((result) => {
-            console.log(result);
+        myBlockChain.addBlock(blockTest).then(() => {
             i++;
-            if (i < 10) theLoop(i);
+            if (i < 10000) theLoop(i);
         })
         
-    }, 10000);
+    }, 100);
+    
   })(0);
+  
+  //check validaton
+  setTimeout(function(){
+    myBlockChain.validateChain();
+},200000) ;
 
+
+//test to get vaildation error
+setTimeout(function(){
+let inducedErrorBlocks = [98,99,100];
+for (var i = 0; i < 3; i++) {
+    myBlockChain.getBlock(inducedErrorBlocks[i]).data='induced chain error';
+}
+},4000)
+
+setTimeout(function(){
+    myBlockChain.validateChain();
+},2000) 
