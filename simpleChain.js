@@ -41,7 +41,7 @@ const Block = require('./block');
     // UTC timestamp
     newBlock.time = new Date().getTime().toString().slice(0,-3);
     // previous block hash
-    if(newBlock.height > 0){
+    if(newBlock.height > -1){
       prevBlock = await this.getBlock(newBlock.height - 1);
       newBlock.previousBlockHash = prevBlock.hash;
     }
@@ -99,7 +99,7 @@ const Block = require('./block');
       valid,
       chainLength = await this.getBlockHeight();
 
-      for (var i = 0; i < this.chainLength-1; i++) {
+      for (var i = 0; i < this.chainLength; i++) {
 
         valid = await this.validateBlock(i)
         // validate block
