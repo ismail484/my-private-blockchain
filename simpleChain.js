@@ -36,7 +36,7 @@ const Block = require('./block');
     let prevBlock;
 
     // Block height
-    newBlock.height = await this.getBlockHeight();
+    newBlock.height = (await this.getBlockHeight()) + 1;
     ;
     // UTC timestamp
     newBlock.time = new Date().getTime().toString().slice(0,-3);

@@ -28,10 +28,10 @@ let myBlockChain=new BlockChain();
          blockTest = new Block("Test Block - " + (i + 1));
         myBlockChain.addBlock(blockTest).then(() => {
             i++;
-            if (i < 10000) theLoop(i);
+            if (i < 10) theLoop(i);
         })
         
-    }, 100);
+    }, 10000);
     
   })(0);
   
@@ -41,7 +41,7 @@ let myBlockChain=new BlockChain();
 },200000) ;
 
 
-//test to get vaildation error
+/* //test to get vaildation error
 setTimeout(function(){
 let inducedErrorBlocks = [98,99,100];
 for (var i = 0; i < 3; i++) {
@@ -51,4 +51,4 @@ for (var i = 0; i < 3; i++) {
 
 setTimeout(function(){
     myBlockChain.validateChain();
-},2000) 
+},2000)  */
