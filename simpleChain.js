@@ -16,11 +16,11 @@ const Block = require('./block');
 |  Class with a constructor for new blockchain 		|
 |  ================================================*/
 
-   class BlockChain{
+class BlockChain{
   constructor(){
 
     leveldb.getBlockHeight().then(count => {
-      if (count === 0) {
+      if (count === -1) {
         this.addBlock(
           new Block('this is the First block in the chain - Genesis block')
         ).then(() => console.log('genesis Block was not existed, but it\'s created now'))
@@ -41,7 +41,7 @@ const Block = require('./block');
     // UTC timestamp
     newBlock.time = new Date().getTime().toString().slice(0,-3);
     // previous block hash
-    if(newBlock.height > -1){
+    if(newBlock.height > 0){
       prevBlock = await this.getBlock(newBlock.height - 1);
       newBlock.previousBlockHash = prevBlock.hash;
     }
@@ -91,41 +91,34 @@ const Block = require('./block');
    // Validate blockchain
     async validateChain(){
       let errorLog = [],
-      chain=[],
-      block,
-      nextBlock,
-      blockHash,
-      previousHash,
-      valid,
+      previousHash = '',
+      valid= false,
       chainLength = await this.getBlockHeight();
 
-      for (var i = 0; i < this.chainLength; i++) {
+      for (let i = 0; i < chainLength; i++) {
 
-        valid = await this.validateBlock(i)
-        // validate block
-        if (!valid){
-            errorLog.push(i);
-        }
-        // compare blocks hash link
-         block = await this.getBlock(i);
-         blockHash = block.hash;
-         nextBlock = await this.getBlock(i + 1)
-         previousHash = nextBlock.previousBlockHash;
-         chain.push(block);
+        this.getBlock(i).then((block) => {
+          valid = this.validateBlock(block.height)
+  
+          if (!valid && block.previousBlockHash !== previousHash) {
+            errorLog.push(i)
+          } 
         
-        if (blockHash!==previousHash) {
-          errorLog.push(i);
-        }
-      }
+          previousHash = block.hash   
+
+      if (i === (chainLength -1)) {
       if (errorLog.length>0) {
         console.log('Block errors = ' + errorLog.length);
         console.log('Blocks: '+errorLog);
       } else {
         console.log('No errors detected');
+         }
       }
+    })
+   }
+ }
 
-      return chain
-    }
+  
 }
 
 

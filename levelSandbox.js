@@ -60,7 +60,7 @@ addLevelDBData: (key,value)=>{
 
  getBlockHeight: () => {
   return new Promise((resolve, reject) => {
-    let height = 0
+    let height = -1
     db.createReadStream()
       .on('data', data => {
         height++
