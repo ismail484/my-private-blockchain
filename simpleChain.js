@@ -100,7 +100,7 @@ class BlockChain{
         this.getBlock(i).then((block) => {
           valid = this.validateBlock(block.height)
   
-          if (!valid && block.previousBlockHash !== previousHash) {
+          if (!valid || block.previousBlockHash !== previousHash) {
             errorLog.push(i)
           } 
         
